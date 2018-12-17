@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+	<title>Tasks</title>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+	<script src="http://code.jquery.com/jquery-3.3.1.min.js"
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+		crossorigin="anonymous">
+	</script>
+</head>
+<body>
+	<div class="container">
+		<h1>To Do List</h1>
+		<div class="new-task">
+			<label>
+				<span class="prompt">Add a task:</span>
+				<input id="txtNewTask" autofocus="">
+			</label>
+			<select id="ddCategory">
+				<option value="home">Home</option>
+				<option value="studies">Studies</option>
+				<option value="work">Work</option>
+			</select>
+			<button id="btnAddTask" class="btn btn-primary">Add</button>
+			<button id="btnRemoveCompleted" class="btn">Remove Completed</button>
+		</div>
+		<div id="tasks">
+			<ul>
+
+			</ul>
+		</div>
+	</div>
+<script type="text/javascript" src="{% static 'js/tasks.js' %}"></script>
+</body>
+</html>

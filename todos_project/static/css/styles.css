@@ -1,0 +1,32 @@
+#tasks li {
+	list-style-type: none;
+}
+
+#tasks li.completed .description {
+	font-style: italic;
+	text-decoration: line-through;
+	color: gray;
+}
+
+#tasks .description {
+	margin-left: 4px;
+}
+
+#tasks li .description:before {
+    content: "";
+    display: inline-block;
+    background-size: 20px 21px;
+    width: 20px;
+    margin: 0 6px 0 0;
+    height: 20px;
+}
+
+#tasks li.cat-home .description:before {
+	background-image: url(home.svg);
+}
+#tasks li.cat-studies .description:before {
+	background-image: url(book.svg);
+}
+#tasks li.cat-work .description:before {
+	background-image: url(portfolio.svg);
+}
