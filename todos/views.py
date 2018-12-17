@@ -5,10 +5,10 @@ def get_all(request):
     tasks = [
         {
             "description": "Buy concert tickets",
-            "category": "Home"
+            "category": "home"
          }, {
             "description": "Cook dinner",
-            "category": "Home"
+            "category": "studies"
          }
     ]
     response = {
