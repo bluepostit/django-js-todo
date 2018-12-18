@@ -13,6 +13,7 @@ var Tasks = {
 	},
 	remove: function (index) {
 		this.tasks.splice(index, 1);
+		this.render();
 	},
 	removeCompleted: function() {
 		this.tasks = this.tasks.filter(function(task) {
@@ -80,13 +81,25 @@ var Tasks = {
 (function setupEvents() {
 	Tasks.setDomElement($('#tasks ul'));
 	function addNewTask() {
+	    // TO DO: check if we're waiting for an AJAX response...
+
+	    //$('#btnAddTask').prop('disabled', true);
 		var description = $('#txtNewTask').val();
 		var category = $('#ddCategory').val();
 		if(description.trim() == "") {
 			alert("You must enter text");
 			return;
 		}
-		$.post('/todos/', {}, 'json')
+		$.post('/todos/',
+			{
+				task: {
+					description: description,
+					category: category,
+					dateAdded: new Date()
+				}
+			},
+			'json'
+		)
         .done(function(data) {
             $('#txtNewTask').val('');
             if (data.code == 200) {
@@ -97,6 +110,9 @@ var Tasks = {
         })
         .fail(function(data) {
             alert("There was a problem adding your task");
+        })
+        .always(function() {
+            $('#btnAddTask').prop('disabled', false);
         });
 	}
 	$(document).on("click", "#tasks .is-completed", function() {
