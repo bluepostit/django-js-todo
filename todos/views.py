@@ -11,7 +11,9 @@ def _get_all_tasks():
 
 
 def index(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
+        return get_all(request)
+    elif request.method == 'POST':
         code = 200
         error = None
         task_for_response = None
@@ -19,17 +21,17 @@ def index(request):
         task_description = request.POST.get('task[description]')
         task_category = request.POST.get('task[category]')
         task_date_added = request.POST.get('task[dateAdded]')
-        if (task_description is not None) and (task_category is not None)\
-                and (task_date_added is not None):
+        if (task_description is None) or (task_category is None)\
+                or (task_date_added is None):
+            code = 400
+            error = 'No task data submitted'
+        else:
             task = Task()
             task.description = task_description
             task.category = task_category
             task.date_added = task_date_added
             task.save()
             task_for_response = task.get_as_dict()
-        else:
-            code = 400
-            error = 'No task data submitted'
 
         response = {
             'task': task_for_response,
@@ -37,8 +39,6 @@ def index(request):
             'error': error
         }
         return JsonResponse(response)
-    else:
-        return get_all(request)
 
 
 def get_all(request):
