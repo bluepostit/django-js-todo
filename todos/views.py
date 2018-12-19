@@ -79,3 +79,7 @@ def update_task(request, task_id):
         'error': error
     }
     return JsonResponse(response)
+
+def delete_completed(request):
+    Task.objects.filter(completed=True).delete()
+    return get_all(request)

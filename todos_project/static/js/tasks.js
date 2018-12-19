@@ -165,7 +165,7 @@ var Tasks = {
 		if (taskIndex < 0) {
 			throw new Exception("Task is not in your list");
 		}
-		$.post('/todos/' + task.id, { task: task },	'json')
+		$.post('/todos/' + task.id + '/', { task: task },	'json')
 		.done(function(data) {
 			if (data.code == 200) {
 				Tasks.tasks[taskIndex] = data.task;
@@ -182,6 +182,25 @@ var Tasks = {
 
 	function loadAllTasks() {
 		$.get('/todos/', {}, 'json')
+		.done(function(data) {
+			if (data.code == 200) {
+				var tasks = data.tasks;
+				if (!!tasks) {
+					Tasks.tasks = tasks;
+					Tasks.render();
+				}
+			}
+		})
+		.fail(function(data) {
+			alert("There was a problem loading the tasks");
+		})
+		.always(function() {
+			$('#btnAddTask').prop('disabled', false);
+		});
+	}
+
+	function deleteAllCompleted() {
+		$.post('/todos/delete-completed/', {}, 'json')
 		.done(function(data) {
 			if (data.code == 200) {
 				var tasks = data.tasks;
@@ -221,7 +240,7 @@ var Tasks = {
 		$('#txtNewTask').focus();
 	});
 	$('#btnRemoveCompleted').on('click', function() {
-		Tasks.removeCompleted();
+		deleteAllCompleted();
 	});
 	$(document).ready(function() {
 		loadAllTasks();
