@@ -80,6 +80,31 @@ var Tasks = {
 })();
 (function setupEvents() {
 	Tasks.setDomElement($('#tasks ul'));
+
+	function getDateString(date) {
+		var year = date.getFullYear();
+		var month = String(date.getMonth() + 1);
+		var day = String(date.getDate());
+		var hour = String(date.getHours());
+		var minute = String(date.getMinutes());
+
+	    if (month.length < 2) {
+	    	month = '0' + month;
+	    }
+	    if (day.length < 2) {
+	    	day = '0' + day;
+	    }
+	    if (hour.length < 2) {
+	    	hour = '0' + hour;
+	    }
+	    if (minute.length < 2) {
+	    	minute = '0' + minute;
+	    }
+
+
+	    return `${year}-${month}-${day} ${hour}:${minute}`;
+	}
+
 	function addNewTask() {
 	    // TO DO: check if we're waiting for an AJAX response...
 
@@ -90,12 +115,13 @@ var Tasks = {
 			alert("You must enter text");
 			return;
 		}
+		var dateString = getDateString(new Date());
 		$.post('/todos/',
 			{
 				task: {
 					description: description,
 					category: category,
-					dateAdded: new Date()
+					dateAdded: dateString
 				}
 			},
 			'json'
@@ -103,9 +129,8 @@ var Tasks = {
         .done(function(data) {
             $('#txtNewTask').val('');
             if (data.code == 200) {
-                var tasks = data.tasks;
-                Tasks.tasks = tasks;
-                Tasks.render();
+                var task = data.task;
+                Tasks.add(task);
             }
         })
         .fail(function(data) {
@@ -115,6 +140,26 @@ var Tasks = {
             $('#btnAddTask').prop('disabled', false);
         });
 	}
+
+	function loadAllTasks() {
+		$.get('/todos/', {}, 'json')
+        .done(function(data) {
+            if (data.code == 200) {
+                var tasks = data.tasks;
+                if (!!tasks) {
+                	Tasks.tasks = tasks;
+                	Tasks.render();
+                }
+            }
+        })
+        .fail(function(data) {
+            alert("There was a problem loading the tasks");
+        })
+        .always(function() {
+            $('#btnAddTask').prop('disabled', false);
+        });
+	}
+	
 	$(document).on("click", "#tasks .is-completed", function() {
 		var taskId = $(this).closest('li').data('task');
 		var task = Tasks.findById(taskId);
@@ -139,4 +184,7 @@ var Tasks = {
 	$('#btnRemoveCompleted').on('click', function() {
 		Tasks.removeCompleted();
 	});
+	$(document).ready(function() {
+		loadAllTasks();
+	})
 })();
