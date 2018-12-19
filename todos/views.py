@@ -48,3 +48,34 @@ def get_all(request):
         "code": 200
     }
     return JsonResponse(response)
+
+def update_task(request, task_id):
+    code = 200
+    error = None
+    task_for_response = None
+
+    task = Task.objects.get(id=task_id)
+    if task is None:
+        code = 404
+        error = f'No task found for id {task_id}'
+    else:
+        task_description = request.POST.get('task[description]')
+        task_category = request.POST.get('task[category]')
+        task_completed = request.POST.get('task[completed]')
+        if (task_description is None) or (task_category is None)\
+                or (task_completed is None):
+            code = 400
+            error = 'No task data submitted'
+        else:
+            task.description = task_description
+            task.category = task_category
+            task.completed = task_completed in ('true', 'True', '1')
+            task.save()
+            task_for_response = task.get_as_dict()
+
+    response = {
+        'task': task_for_response,
+        'code': code,
+        'error': error
+    }
+    return JsonResponse(response)

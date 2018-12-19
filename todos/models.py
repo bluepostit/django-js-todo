@@ -4,7 +4,7 @@ class Task(models.Model):
     description = models.CharField(max_length=200)
     category = models.CharField(max_length=100)
     date_added = models.DateTimeField()
-    date_completed = models.DateTimeField(default=None, null=True)
+    completed = models.BooleanField(default=False)
 
     def get_as_dict(self):
         return {
@@ -12,5 +12,5 @@ class Task(models.Model):
             'description': self.description,
             'category': self.category,
             'date_added': self.date_added,
-            'date_completed': self.date_completed
+            'completed': self.completed
         }
